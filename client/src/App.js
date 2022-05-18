@@ -2,7 +2,8 @@ import './App.css';
 import Form from './components/Form';
 import List from './components/List';
 import Details from './components/Details';
-import { Link, Routes, Rout, Navigate, Route } from "react-router-dom"
+import Edit from './components/Edit';
+import { Routes, Route } from "react-router-dom"
 import React, { useState } from 'react'
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           </>
         } />
         <Route path='/products/:id' element={<Details />} />
+        <Route path='/update/:id' element={<Edit products={products} setProducts={setProducts} />} />
 
 
 

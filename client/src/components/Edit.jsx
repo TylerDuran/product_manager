@@ -1,32 +1,50 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import { useParams, useNavigate } from 'react-router-dom'
 
 
+const Edit = (props) => {
 
-const Form = (props) => {
+    const navigate = useNavigate();
 
     const [title, setTitle] = useState("")
     const [price, setPrice] = useState("")
     const [description, setDescription] = useState("")
+    
+    const{id} = useParams();
 
     const {products, setProducts} = props;
+
+    // Get data from the DbB so the form is pre filled
+    useEffect(() => {
+        axios.get("http://localhost:8000/api/products/" + id)
+            .then(res => {
+                console.log(res.data);
+                setTitle(res.data.title)
+                setPrice(res.data.price)
+                setDescription(res.data.description)
+            })
+            .catch(err => console.log(err))
+    }, [id])
+
 
     const createProduct = (e) => {
         e.preventDefault()
 
-        const newProduct = {
+        const updatedProduct = {
             title,
             price,
             description
         }
-        console.log(newProduct);
+        console.log(updatedProduct);
 
         // POST to the DB with the obj
-        axios.post("http://localhost:8000/api/products", newProduct)
+        axios.put("http://localhost:8000/api/products/" +id, updatedProduct)
             .then(res => {
                 console.log(res.data);
                 console.log("CLIENT SUCCESS!!!!");
-                setProducts([...products, newProduct])
+                navigate("/products/" + id);
+                setProducts([...products, updatedProduct])
             })
             .catch(err => {
                 // TODO: when errors come from Server!
@@ -37,11 +55,11 @@ const Form = (props) => {
 
     return (
         <div>
-            {/* <p>
-                {JSON.stringify(title)} <br />
-                {JSON.stringify(price)} <br />
-                {JSON.stringify(description)}<br />
-            </p> */}
+        <p>
+        {JSON.stringify(title)} <br />
+        {JSON.stringify(price)} <br />
+        {JSON.stringify(description)}<br />
+        </p> 
             <form onSubmit={createProduct}>
                 Title: <input onChange={(e) => setTitle(e.target.value)} value={title} /> <br />
 
@@ -55,4 +73,4 @@ const Form = (props) => {
     )
 }
 
-export default Form
+export default Edit
