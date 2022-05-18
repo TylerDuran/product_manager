@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
 
-const Form = () => {
+
+const Form = (props) => {
 
     const [title, setTitle] = useState("")
     const [price, setPrice] = useState("")
     const [description, setDescription] = useState("")
+
+    const {products, setProducts} = props;
 
     const createProduct = (e) => {
         e.preventDefault()
@@ -23,6 +25,7 @@ const Form = () => {
             .then(res => {
                 console.log(res.data);
                 console.log("CLIENT SUCCESS!!!!");
+                setProducts([...products, newProduct])
             })
             .catch(err => {
                 // TODO: when errors come from Server!
@@ -33,11 +36,11 @@ const Form = () => {
 
     return (
         <div>
-            <p>
+            {/* <p>
                 {JSON.stringify(title)} <br />
                 {JSON.stringify(price)} <br />
                 {JSON.stringify(description)}<br />
-            </p>
+            </p> */}
             <form onSubmit={createProduct}>
                 Title: <input onChange={(e) => setTitle(e.target.value)} value={title} /> <br />
 
